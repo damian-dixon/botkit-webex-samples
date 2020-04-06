@@ -23,15 +23,14 @@ module.exports = function ( controller ) {
         }
     } );
 
-    let question = 'Which statement is false?  \n';
+    let question = 'Which statement is false? Please respond with `1`, `2` or `3`.\n';
     question += '1. I can speak 8 different languages/dialects. \n';
     question += '2. In 2008, I had an accident and now have a prosthetic left leg. \n';
     question += '3. At the age of 14, I got bored after school hours so I worked in a construction site and got paid $4 for 4 hours work. \n';
-    question += 'Please type either `1`, `2` or `3`. \n';
         
     convo.ask( { channelData: { markdown: question } }, [
         {
-            pattern: '^1|2|3&',
+            pattern: '1|2|3',
             handler: async ( response, convo ) => {
                 await convo.gotoThread( 'survey_submit' );
             }

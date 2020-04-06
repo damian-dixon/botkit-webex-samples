@@ -23,14 +23,17 @@ module.exports = function ( controller ) {
         }
     } );
 
-    let question = '(Survey) Please enter the session for which you\'d like to provide feedback  \n';
-    question += '_Available sessions: DEVNET-1808 / DEVNET-1871 / DEVNET-2071 / DEVNET-2074 / DEVNET-2896_';
-    
+    let question = 'Which statement is false?  \n';
+    question += '1. I can speak 8 different languages/dialects. \n';
+    question += '2. In 2008, I had an accident and now have a prosthetic left leg. \n';
+    question += '3. At the age of 14, I got bored after school hours so I worked in a construction site and got paid $4 for 4 hours work. \n';
+    question += 'Please type either `1`, `1` or `3`.   \n';
+        
     convo.ask( { channelData: { markdown: question } }, [
         {
-            pattern: '^DEVNET-1808|DEVNET-1871|DEVNET-2071|DEVNET-2074|DEVNET-2896&',
+            pattern: '^1|2|3&',
             handler: async ( response, convo ) => {
-                await convo.gotoThread( 'survey_confirm' );
+                await convo.gotoThread( 'survey_submit' );
             }
         },
         {
@@ -42,12 +45,12 @@ module.exports = function ( controller ) {
     ], 'survey_session_id' );
 
     convo.addMessage( {
-        text: '(Survey) No survey results Space configured; using current Space',
+        text: 'No survey results Space configured; using current Space',
         action: 'default'
     }, 'survey_warn_space');
 
     convo.addMessage( {
-        text: '(Survey) Unrecognized session Id...',
+        text: 'Unrecognized session Id...',
         action: 'default'
     }, 'survey_cancel' );
 
@@ -70,10 +73,10 @@ module.exports = function ( controller ) {
 
         await bot.api.messages.create( {
             roomId: convo.vars.survey_space,
-            text: `(Survey) Session ${ convo.vars.survey_session_id } was rated: ${ convo.vars.survey_rating }`
+            text: `You said that item ${ convo.vars.survey_session_id } is false`
         } )
         .then( async () => {
-            convo.setVar('survey_result', 'Thanks for providing your feedback!')
+            convo.setVar('survey_result', 'Thanks for participating!')
         } )
         .catch( async ( err ) => {
             convo.setVar('survey_result', `Error submitting results: ${err.body.message}`)

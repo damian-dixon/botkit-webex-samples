@@ -72,7 +72,7 @@ module.exports = function ( controller ) {
 
         await bot.api.messages.create( {
             roomId: convo.vars.survey_space,
-            text: `${ controller.api.people.get } said that item ${ convo.vars.survey_session_id } is false`
+            text: `You said that item ${ convo.vars.survey_session_id } is false`
         } )
         .then( async () => {
             convo.setVar('survey_result', 'Thanks for participating!')
